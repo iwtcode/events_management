@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Panel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .logout-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            padding: 0;
+        }
+        .logout-button img {
+            max-width: 60%;
+            max-height: 60%;
+        }
+        .logout-button:hover {
+            background-color: #0056b3;
+        }
+        .applications-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 900px;
+        }
+        .applications-container h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table th, table td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        table th {
+            background-color: #007BFF;
+            color: #fff;
+        }
+        .action-buttons {
+            display: flex;
+            height: 100%;
+        }
+        .action-buttons form {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .action-buttons button {
+            width: 90%;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .accept-button {
+            background-color: #28a745;
+            color: white;
+        }
+        .accept-button:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+        .reject-button {
+            background-color: #dc3545;
+            color: white;
+        }
+        .reject-button:hover {
+            background-color: #c82333;
+            transform: scale(1.05);
+        }
+        .team-input {
+            width: 60px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        td form {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .select-status {
+            flex: 1;
+            height: 40px;
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            background-color: #f9f9f9;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .select-status:focus {
+            border-color: #007BFF;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            outline: none;
+        }
+        .update-button {
+            flex: 1;
+            height: 40px;
+            padding: 5px 15px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .update-button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+        .update-button:active {
+            transform: scale(1);
+        }
+        .success-message {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .error-message {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<button class="logout-button" onclick="window.location.href='/logout';">
+    <img src="/img/logout.png" alt="Logout">
+</button>
+<div class="applications-container">
+    <h2>Manage Applications</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>User</th>
+            <th>Event</th>
+            <th>Team</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="app : ${apps}">
+            <td th:text="${app.id}"></td>
+            <td th:text="${userMap[app.userId]}"></td>
+            <td th:text="${eventMap[app.eventId]}"></td>
+            <td><input type="number" name="teamId" class="team-input" placeholder="Team #" required></td>
+            <td class="action-buttons">
+                <form method="post" action="/manager/accept">
+                    <input type="hidden" name="appId" value="">
+                    <input type="hidden" name="teamId" value="">
+                    <button type="submit" class="accept-button">Accept</button>
+                </form>
+                <form method="post" action="/manager/reject">
+                    <input type="hidden" name="appId" value="">
+                    <button type="submit" class="reject-button">Reject</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div th:if="${successMessage}" class="success-message" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="error-message" th:text="${errorMessage}"></div>
+
+    <h2>Manage Event</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Event</th>
+            <th>Current Status</th>
+            <th>Change Status</th>
+            <th>Add Comment</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="event : ${events}">
+            <td th:text="${event.id}"></td>
+            <td th:text="${event.title}"></td>
+            <td th:text="${event.status}"></td>
+            <td>
+                <form method="post" action="/manager/changeStatus">
+                    <input type="hidden" name="eventId" th:value="${event.id}">
+                    <select name="newStatus" class="select-status">
+                        <option th:selected="${event.status == 'Open'}" value="Open">Open</option>
+                        <option th:selected="${event.status == 'Process'}" value="Process">Process</option>
+                        <option th:selected="${event.status == 'Close'}" value="Close">Close</option>
+                    </select>
+                    <button type="submit" class="update-button">Update</button>
+                </form>
+            </td>
+            <td>
+                <form method="post" action="/manager/addComment">
+                    <input type="hidden" name="eventId" th:value="${event.id}">
+                    <input type="text" name="comment" placeholder="Add your comment" required>
+                    <button type="submit" class="update-button">Add Comment</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div th:if="${eventSuccessMessage}" class="success-message" th:text="${eventSuccessMessage}"></div>
+    <div th:if="${eventErrorMessage}" class="error-message" th:text="${eventErrorMessage}"></div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const rows = document.querySelectorAll("tbody tr");
+
+        rows.forEach(row => {
+            const appId = row.querySelector("td:nth-child(1)").innerText.trim();
+            const teamInput = row.querySelector(".team-input");
+
+            const acceptForm = row.querySelector('form[action="/manager/accept"]');
+            const rejectForm = row.querySelector('form[action="/manager/reject"]');
+
+            const hiddenAcceptAppId = acceptForm.querySelector('input[name="appId"]');
+            const hiddenAcceptTeamId = acceptForm.querySelector('input[name="teamId"]');
+
+            const hiddenRejectAppId = rejectForm.querySelector('input[name="appId"]');
+
+            hiddenAcceptAppId.value = appId;
+            hiddenRejectAppId.value = appId;
+
+            acceptForm.addEventListener("submit", event => {
+                if (!teamInput.value) {
+                    event.preventDefault();
+                    alert("Please enter a valid Team ID before accepting.");
+                } else {
+                    hiddenAcceptTeamId.value = teamInput.value;
+                }
+            });
+
+            rejectForm.addEventListener("submit", event => {});
+        });
+    });
+</script>
+</body>
+</html>

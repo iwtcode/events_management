@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administrator Panel</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .logout-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      width: 40px;
+      height: 40px;
+      background-color: #007BFF;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+    }
+    .logout-button img {
+      max-width: 60%;
+      max-height: 60%;
+    }
+    .logout-button:hover {
+      background-color: #0056b3;
+    }
+    .admin-container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 80%;
+      max-width: 900px;
+    }
+    .admin-container h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    table th, table td {
+      padding: 10px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+    table th {
+      background-color: #007BFF;
+      color: #fff;
+    }
+    .create-event-form, .delete-event-form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .create-event-form input, .create-event-form textarea, .create-event-form button,
+    .delete-event-form input, .delete-event-form button {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .create-event-form button, .delete-event-form button {
+      cursor: pointer;
+      border: none;
+      transition: background-color 0.3s;
+    }
+    .create-event-form textarea {
+      width: 100%;
+      max-width: 100%;
+      height: 150px;
+      resize: none;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    .create-event-form button {
+      background-color: #28a745;
+      color: white;
+    }
+    .create-event-form button:hover {
+      background-color: #218838;
+    }
+    .delete-event-form button {
+      background-color: #dc3545;
+      color: white;
+    }
+    .delete-event-form button:hover {
+      background-color: #c82333;
+    }
+    .user-management-form select, .user-management-form button {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .user-management-form button {
+      cursor: pointer;
+      color: white;
+      border: none;
+      transition: background-color 0.3s;
+    }
+    .delete-user-button {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      transition: background-color 0.3s;
+    }
+    .delete-user-button:hover {
+      background-color: #c82333;
+    }
+    .success-message {
+      color: #155724;
+      background-color: #d4edda;
+      border-color: #c3e6cb;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .error-message {
+      color: #721c24;
+      background-color: #f8d7da;
+      border-color: #f5c6cb;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .accept-button {
+      width: 100%;
+      margin: 0;
+      box-sizing: border-box;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 10px 20px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+    .accept-button:hover {
+      background-color: #218838;
+      transform: scale(1.05);
+    }
+    .accept-button:active {
+      transform: scale(1);
+    }
+    .reject-button {
+      width: 100%;
+      margin: 0;
+      box-sizing: border-box;
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 10px 20px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+    .reject-button:hover {
+      background-color: #c82333;
+      transform: scale(1.05);
+    }
+    .reject-button:active {
+      transform: scale(1);
+    }
+    .update-button {
+      flex: 1;
+      padding: 10px;
+      border-radius: 4px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+    .update-button:hover {
+      background-color: #0056b3;
+      transform: scale(1.05);
+    }
+    .update-button:active {
+      transform: scale(1);
+    }
+    .action-buttons {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+    }
+    .action-buttons form {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+      padding: 0;
+    }
+    .action-buttons form + form {
+      margin-left: 10px;
+    }
+    .select-role {
+      flex: 1;
+      min-width: 150px;
+      height: 40px;
+      padding: 5px 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      background-color: #f9f9f9;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .select-role:focus {
+      border-color: #007BFF;
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+      outline: none;
+    }
+    table td {
+      position: relative;
+      padding: 10px;
+      vertical-align: middle;
+    }
+    .user-management-form {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+    }
+    .user-management-form select,
+    .user-management-form button {
+      flex: 1;
+      max-width: 50%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    .user-management-form button {
+      color: white;
+      border: none;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+    .user-management-form button:hover {
+      transform: scale(1.05);
+    }
+    .user-management-form button:active {
+      transform: scale(1);
+    }
+  </style>
+</head>
+<body>
+<button class="logout-button" onclick="window.location.href='/logout';">
+  <img src="/img/logout.png" alt="Logout">
+</button>
+<div class="admin-container">
+  <h2>Administrator Panel</h2>
+
+  <h3>Create New Event</h3>
+  <form class="create-event-form" method="post" action="/admin/createEvent">
+    <input type="text" name="title" placeholder="Event Title" required>
+    <textarea name="description" placeholder="Event Description" rows="4" required></textarea>
+    <button type="submit">Create Event</button>
+  </form>
+  <div class="success-message" th:if="${createMessage}" th:text="${createMessage}"></div>
+  <div class="error-message" th:if="${createError}" th:text="${createError}"></div>
+
+  <h3>Delete Event</h3>
+  <form class="delete-event-form" method="post" action="/admin/deleteEvent">
+    <input type="text" name="eventTitle" placeholder="Event Title" required>
+    <button type="submit">Delete Event</button>
+  </form>
+  <div class="success-message" th:if="${deleteMessage}" th:text="${deleteMessage}"></div>
+  <div class="error-message" th:if="${deleteError}" th:text="${deleteError}"></div>
+
+  <h3>Ideas from Users</h3>
+  <table>
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Title</th>
+      <th>Description</th>
+      <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="idea : ${ideas}">
+      <td th:text="${idea.id}"></td>
+      <td th:text="${idea.title}"></td>
+      <td th:text="${idea.description}"></td>
+      <td>
+        <div class="action-buttons">
+          <form method="post" action="/admin/selectIdea">
+            <input type="hidden" name="ideaId" th:value="${idea.id}">
+            <button type="submit" class="accept-button">Use Idea</button>
+          </form>
+          <form method="post" action="/admin/rejectIdea">
+            <input type="hidden" name="ideaId" th:value="${idea.id}">
+            <button type="submit" class="reject-button">Reject</button>
+          </form>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <h3>Manage Users</h3>
+  <table>
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Login</th>
+      <th>Role</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${logins}">
+      <td th:text="${user.id}"></td>
+      <td th:text="${user.user}"></td>
+      <td>
+        <form method="post" action="/admin/updateUserRole" class="user-management-form">
+          <input type="hidden" name="userId" th:value="${user.id}">
+          <select name="role" class="select-role">
+            <option th:selected="${user.role == 'user'}" value="user">User</option>
+            <option th:selected="${user.role == 'manager'}" value="manager">Manager</option>
+          </select>
+          <button type="submit" class="update-button">Update</button>
+        </form>
+      </td>
+      <td>
+        <form method="post" action="/admin/removeUserFromEvent" class="user-management-form">
+          <input type="hidden" name="userId" th:value="${user.id}">
+          <select name="eventId" class="select-role" required>
+            <option value="" disabled selected>Select event</option>
+            <option th:each="event : ${userEventsMap[user.id]}"
+                    th:value="${event.id}"
+                    th:text="${event.title}">
+            </option>
+          </select>
+          <button type="submit" class="delete-user-button">Remove</button>
+        </form>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <div class="success-message" th:if="${userMessage}" th:text="${userMessage}"></div>
+  <div class="error-message" th:if="${userError}" th:text="${userError}"></div>
+</div>
+</body>
+</html>

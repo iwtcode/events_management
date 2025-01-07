@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .logout-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            padding: 0;
+        }
+        .logout-button img {
+            max-width: 60%;
+            max-height: 60%;
+        }
+        .logout-button:hover {
+            background-color: #0056b3;
+        }
+        .events-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 800px;
+        }
+        .events-container h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .event-section {
+            margin-bottom: 30px;
+        }
+        .event-section h3 {
+            color: #007BFF;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #007BFF;
+            padding-bottom: 5px;
+        }
+        .event {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f8f8f8;
+            gap: 20px;
+        }
+        .event img {
+            max-width: 150px;
+            max-height: 150px;
+            border-radius: 4px;
+            object-fit: cover;
+        }
+        .event-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .event-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+        .event-description {
+            font-size: 14px;
+            color: #555;
+        }
+        .event-status {
+            font-size: 14px;
+            color: #007BFF;
+            font-weight: bold;
+        }
+        .team-details {
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+        }
+        .team-details span {
+            display: inline;
+        }
+        .apply-form {
+            width: 100%;
+            margin-top: 10px;
+        }
+        .apply-button {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            background-color: #007BFF;
+            cursor: pointer;
+        }
+        .apply-button:hover {
+            background-color: #0056b3;
+        }
+        .status-message {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .status-message.success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .status-message.error {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .suggest-idea-button {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: #28a745;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .suggest-idea-form {
+            display: none;
+            position: fixed;
+            bottom: 100px;
+            left: 20px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            box-sizing: border-box;
+        }
+        .suggest-idea-form h3 {
+            margin-top: 0;
+        }
+        .suggest-idea-form input,
+        .suggest-idea-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .suggest-idea-form textarea {
+            height: 100px;
+            resize: none;
+        }
+        .suggest-idea-form button {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .toggle-comment-button {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007BFF;
+            color: #fff;
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+        .toggle-comment-button:hover {
+            background-color: #0056b3;
+        }
+        .event-comment {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #555;
+            background: #f1f1f1;
+            padding: 10px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+<button class="logout-button" onclick="window.location.href='/logout';">
+    <img src="/img/logout.png" alt="Logout">
+</button>
+<div class="events-container">
+    <h2>Events</h2>
+    <div class="event-section">
+        <h3>Available Events</h3>
+        <div th:each="event : ${availableEvents}" class="event">
+            <img th:if="${eventImages[event.id]}" th:src="'data:image/jpeg;base64,' + ${eventImages[event.id]}" alt="Event Image">
+            <div class="event-details">
+                <div class="event-title" th:text="${event.title}"></div>
+                <div class="event-description" th:text="${event.description}"></div>
+                <div class="event-status" th:text="'Status: ' + ${event.status}"></div>
+                <form action="/events/apply" method="post" class="apply-form">
+                    <div class="status-message"
+                         th:if="${successEventId == event.id || errorEventId == event.id}"
+                         th:classappend="${successEventId == event.id ? 'success' : 'error'}">
+                        <span th:text="${successEventId == event.id ? 'Ваша заявка успешно отправлена.' : 'Заявка уже была отправлена.'}"></span>
+                    </div>
+                    <input type="hidden" name="eventId" th:value="${event.id}">
+                    <button type="submit" class="apply-button">Оставить заявку</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="event-section">
+        <h3>Your Events</h3>
+        <div th:each="event : ${userEvents}" class="event">
+            <img th:if="${eventImages[event.id]}" th:src="'data:image/jpeg;base64,' + ${eventImages[event.id]}" alt="Event Image">
+            <div class="event-details">
+                <div class="event-title" th:text="${event.title}"></div>
+                <div class="event-description" th:text="${event.description}"></div>
+                <div class="team-details">
+                    <span>Team Participants: </span>
+                    <span th:text="${eventParticipants[event.id]}"></span>
+                </div>
+                <div class="event-status" th:text="'Status: ' + ${event.status}"></div>
+                <button class="toggle-comment-button" onclick="toggleComment(this)">Show Comment</button>
+                <div class="event-comment" style="display: none;" th:text="${event.comment}"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<button class="suggest-idea-button" onclick="toggleSuggestIdeaForm()">Предложить идею</button>
+
+<div class="suggest-idea-form" id="suggest-idea-form">
+    <h3>Предложить идею</h3>
+    <form action="/events/submitIdea" method="post">
+        <input type="text" name="title" placeholder="Название мероприятия" required>
+        <textarea name="description" placeholder="Описание мероприятия" required></textarea>
+        <button type="submit">Отправить</button>
+    </form>
+</div>
+
+<script>
+    function toggleSuggestIdeaForm() {
+        var form = document.getElementById('suggest-idea-form');
+        form.style.display = form.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function toggleComment(button) {
+        const commentDiv = button.nextElementSibling;
+        if (commentDiv.style.display === "none") {
+            commentDiv.style.display = "block";
+            button.textContent = "Hide Comment";
+        } else {
+            commentDiv.style.display = "none";
+            button.textContent = "Show Comment";
+        }
+    }
+
+    function formatComments() {
+        const commentDivs = document.querySelectorAll('.event-comment');
+        commentDivs.forEach(div => {
+            const rawText = div.textContent;
+            div.innerHTML = rawText.replace(/\\n/g, '<br>');
+        });
+    }
+
+    // Вызов функции после загрузки страницы
+    document.addEventListener('DOMContentLoaded', formatComments);
+</script>
+</body>
+</html>

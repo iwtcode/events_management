@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+        .login-form h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+        .login-form .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .login-form label {
+            display: block;
+            font-size: 14px;
+            color: #555;
+        }
+        .login-form input,
+        .login-form button {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .login-form input {
+            margin-bottom: 10px;
+        }
+        .login-form button {
+            font-size: 16px;
+            color: #fff;
+            background-color: #007BFF;
+            border: none;
+            cursor: pointer;
+        }
+        .login-form button:hover {
+            background-color: #0056b3;
+        }
+        .login-form .register-link {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        .login-form .register-link a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+        .login-form .register-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<form class="login-form" action="/login" method="post">
+    <h2>Login</h2>
+    <div class="form-group">
+        <label for="user">Username</label>
+        <input type="text" id="user" name="user" placeholder="Enter your username" required>
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+    </div>
+    <button type="submit">Login</button>
+    <div id="error-message" style="color: red; margin-top: 10px;">
+        <p th:text="${error}" th:if="${error != null}"></p>
+    </div>
+    <div class="register-link">
+        <p><a href="/register">Not registered yet? Register here</a></p>
+    </div>
+</form>
+
+</body>
+</html>
